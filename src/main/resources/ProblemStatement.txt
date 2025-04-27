@@ -1,0 +1,21 @@
+Big company is employing a lot of employees. Company would like to analyze it's organizational structure and identify potential improvements. Board wants to make sure that every manager earns at least 20% more than the average salary of his direct subordinates, but no more than 50% more than that average. Company wants to avoid too long reporting lines, therefore we would like to identify all employees which have more than 4 managers between them and the CEO.
+
+You are given a csv file which contains information about all employees. File structure looks like this,
+
+Id,firstName,lastName,salary,managerId
+123,Joe,Doe,60000,
+124,Martin,Chekov,45000,123
+
+Each line represents an employee(CEO included). CEO has no manager specified. Number of rows can be upto 1000
+
+Write a simple program which will read the file and report:
+1. Which manager earn less than they should and by how much
+2. Which manager earn more than they should, and by how much
+3. Which employees have a reporting line which is too long, and by how much
+
+Key points:
+1. Use Java SE and Junit
+2. Maven
+3. App should read data from a file and print output in console.
+4. Code will be assessed on correctness, simplicity, readability and cleanliness
+5. If you have any doubts, make a sensible assumption and document it.
