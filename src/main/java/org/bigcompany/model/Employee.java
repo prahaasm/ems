@@ -15,7 +15,6 @@ public class Employee {
     private String lastName;
     private Double salary;
     private Integer managerId;
-    private List<Employee> subordinates = new ArrayList<>();
     private Byte level;
 
 }
