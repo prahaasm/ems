@@ -1,33 +1,17 @@
-package org.bigcompany.service;
+package org.bigcompany.service.impl;
 
 import org.bigcompany.model.Employee;
+import org.bigcompany.service.EmployeeCompensationService;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.ArrayList;
 
-public class EmployeeService {
+public class EmployeeCompensationServiceImpl implements EmployeeCompensationService {
 
-    public void assignLevels(Map<Integer, Employee> employeeMap) {
-        for (Employee employee : employeeMap.values()) {
-            if (employee.getLevel() == null) {
-                assignEmployeeLevel(employee, employeeMap);
-            }
-        }
-    }
-
-    private byte assignEmployeeLevel(Employee employee, Map<Integer, Employee> employeeMap) {
-        if (employee.getManagerId() == null) {
-            employee.setLevel((byte) 1);
-        } else {
-            Employee manager = employeeMap.get(employee.getManagerId());
-            if (manager.getLevel() == null) {
-                manager.setLevel(assignEmployeeLevel(manager, employeeMap));
-            }
-            employee.setLevel((byte) (manager.getLevel() + 1));
-        }
-        return employee.getLevel();
-    }
-
-    public Map<Employee, Double> findManagersPaidLess(Map<Integer, Employee> employeeMap) {
+    @Override
+    public Map<Employee, Double> findManagersPaidLess(Map<Integer, Employee> employeeMap, Integer minPercentage) {
         Map<Employee, Double> underpaidManagers = new HashMap<>();
         for (Employee manager : employeeMap.values()) {
             List<Employee> directReports = getDirectReports(manager, employeeMap);
@@ -36,7 +20,7 @@ public class EmployeeService {
                         .mapToDouble(Employee::getSalary)
                         .average()
                         .orElse(0.0);
-                double minimumRequiredSalary = avgSubordinateSalary * 1.2;
+                double minimumRequiredSalary = avgSubordinateSalary * getMultiplier(minPercentage);
                 if (manager.getSalary() < minimumRequiredSalary) {
                     underpaidManagers.put(manager, minimumRequiredSalary - manager.getSalary());
                 }
@@ -45,7 +29,8 @@ public class EmployeeService {
         return underpaidManagers;
     }
 
-    public Map<Employee, Double> findManagersPaidMore(Map<Integer, Employee> employeeMap) {
+    @Override
+    public Map<Employee, Double> findManagersPaidMore(Map<Integer, Employee> employeeMap, Integer maxPercentage) {
         Map<Employee, Double> overpaidManagers = new HashMap<>();
         for (Employee manager : employeeMap.values()) {
             List<Employee> directReports = getDirectReports(manager, employeeMap);
@@ -54,24 +39,13 @@ public class EmployeeService {
                         .mapToDouble(Employee::getSalary)
                         .average()
                         .orElse(0.0);
-                double maximumAllowedSalary = avgSubordinateSalary * 1.5;
+                double maximumAllowedSalary = avgSubordinateSalary * getMultiplier(maxPercentage);
                 if (manager.getSalary() > maximumAllowedSalary) {
                     overpaidManagers.put(manager, manager.getSalary() - maximumAllowedSalary);
                 }
             }
         }
         return overpaidManagers;
-    }
-
-    public Map<Employee, Integer> findEmployeesWithLongReportingLines(Map<Integer, Employee> employeeMap, byte maxDepthAllowed) {
-        Map<Employee, Integer> longReportingEmployees = new HashMap<>();
-        for (Employee employee : employeeMap.values()) {
-            int depth = employee.getLevel() != null ? employee.getLevel() : 0;
-            if (depth > maxDepthAllowed + 1) { // CEO is Level 1
-                longReportingEmployees.put(employee, depth - 1);
-            }
-        }
-        return longReportingEmployees;
     }
 
     private List<Employee> getDirectReports(Employee manager, Map<Integer, Employee> employeeMap) {
@@ -82,5 +56,9 @@ public class EmployeeService {
             }
         }
         return reports;
+    }
+
+    private static Double getMultiplier(Integer percentageToAdd) {
+        return (100.0 + percentageToAdd) / 100.0;
     }
 }

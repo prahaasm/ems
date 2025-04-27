@@ -3,9 +3,6 @@ package org.bigcompany.model;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Data
 @NoArgsConstructor
 public class Employee {
@@ -17,4 +14,11 @@ public class Employee {
     private Integer managerId;
     private Byte level;
 
+    public Employee(Integer id, String firstName, String lastName, double salary, Integer managerId) {
+        this.id = id;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.salary = salary;
+        this.managerId = managerId;
+    }
 }

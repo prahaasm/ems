@@ -66,8 +66,8 @@ class EmployeeParserTest {
         Employee employee = EmployeeParser.getEmployee(line, LINE_NUMBER);
 
         assertEquals(104, employee.getId());
-        assertEquals("Mark", employee.getFirstName());
-        assertEquals("Johnson", employee.getLastName());
+        assertEquals("Senthil", employee.getFirstName());
+        assertEquals("Nathan", employee.getLastName());
         assertEquals(60000.0, employee.getSalary());
         assertEquals(200, employee.getManagerId());
     }
@@ -79,8 +79,8 @@ class EmployeeParserTest {
         Employee employee = EmployeeParser.getEmployee(line, LINE_NUMBER);
 
         assertEquals(105, employee.getId());
-        assertEquals("Alice", employee.getFirstName());
-        assertEquals("Brown", employee.getLastName());
+        assertEquals("Anna", employee.getFirstName());
+        assertEquals("Durai", employee.getLastName());
         assertEquals(95000.0, employee.getSalary());
         assertEquals(300, employee.getManagerId());
     }
